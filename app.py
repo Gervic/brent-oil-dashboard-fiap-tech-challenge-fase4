@@ -81,8 +81,8 @@ with tab1:
     monthly_avg = df['petrol_price'].resample('M').mean()
     yearly_avg = df['petrol_price'].resample('Y').mean()
 
-    st.write("Shape do df:", df.shape)
-    st.dataframe(df.head())
+    st.write("Shape do df:", data.shape)
+    st.dataframe(data.head())
     
     fig = go.Figure()
 
