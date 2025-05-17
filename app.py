@@ -185,65 +185,6 @@ with tab2:
 with tab3:
     st.header("Price Forecast")
     
-    # Prepare data for forecasting
-    data['Target'] = data['Close'].shift(-1)
-    data['MA5'] = data['Close'].rolling(window=5).mean()
-    data['MA20'] = data['Close'].rolling(window=20).mean()
-    data['Returns'] = data['Close'].pct_change()
-    data['Volatility'] = data['Returns'].rolling(window=30).std()
-    
-    # Drop NaN values
-    data_clean = data.dropna()
-    
-    # Features for prediction
-    features = ['Close', 'MA5', 'MA20', 'Returns', 'Volatility']
-    X = data_clean[features]
-    y = data_clean['Target']
-    
-    # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    # Train model
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
-    
-    # Make prediction for next day
-    last_data = X.iloc[-1:].copy()
-    forecast = model.predict(last_data)[0]
-    
-    # Display current price and forecast
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("Current Price", f"${data['Close'].iloc[-1]:.2f}")
-    with col2:
-        st.metric("Next Day Forecast", f"${forecast:.2f}", 
-                 delta=f"{((forecast - data['Close'].iloc[-1]) / data['Close'].iloc[-1] * 100):.2f}%")
-    
-    # Plot historical prices with forecast
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=data.index[-30:],
-        y=data['Close'].tail(30),
-        mode='lines',
-        name='Historical Price',
-        line=dict(color='#2E86C1')
-    ))
-    
-    fig.add_trace(go.Scatter(
-        x=[data.index[-1], data.index[-1] + timedelta(days=1)],
-        y=[data['Close'].iloc[-1], forecast],
-        mode='lines+markers',
-        name='Forecast',
-        line=dict(color='#E67E22', dash='dash')
-    ))
-    
-    fig.update_layout(
-        title="Price Forecast for Next Day",
-        xaxis_title="Date",
-        yaxis_title="Price (USD)",
-        template="plotly_white"
-    )
-    st.plotly_chart(fig, use_container_width=True)
 
 # Add footer
 st.markdown("---")
