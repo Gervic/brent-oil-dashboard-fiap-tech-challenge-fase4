@@ -80,6 +80,9 @@ with tab1:
     df['price_pct_change'] = df['petrol_price'].pct_change() * 100
     monthly_avg = df['petrol_price'].resample('M').mean()
     yearly_avg = df['petrol_price'].resample('Y').mean()
+
+    st.write("Shape do df:", df.shape)
+    st.dataframe(df.head())
     
     fig = go.Figure()
 
