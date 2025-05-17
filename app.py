@@ -297,6 +297,8 @@ with tab2:
             
         # Use monthly average for market phase identification to reduce noise
         bull_markets, bear_markets = identify_market_phases(monthly_avg, threshold=0.2)
+        years = mdates.YearLocator(5)  # every 5 years
+        years_fmt = mdates.DateFormatter('%Y')
         
         # Plot bull and bear markets
         plt.figure(figsize=(15, 7))
