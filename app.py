@@ -38,27 +38,88 @@ def load_data():
 data = load_data()
 
 # Create tabs for different visualizations
-tab1, tab2, tab3, tab4 = st.tabs(["Price Trends", "Volatility", "Seasonality", "Forecast"])
+tab1, tab2, tab3 = st.tabs(["Price Trends", "Volatility", "Seasonality", "Forecast"])
+
+#Dicionário de Eventos e Função para Anotações
+# Dicionário de eventos geopolíticos e econômicos relevantes
+events = {
+    '2011-03-15': {'event': 'Primavera Árabe', 'desc': 'Revoltas no Oriente Médio e Norte da África'},
+    '2014-11-27': {'event': 'OPEP não corta produção', 'desc': 'OPEP mantém produção apesar dos preços em queda'},
+    '2016-01-16': {'event': 'Sanções do Irã removidas', 'desc': 'Fim das sanções ao Irã aumenta oferta global'},
+    '2016-11-30': {'event': 'Acordo OPEP', 'desc': 'OPEP concorda em cortar produção pela primeira vez desde 2008'},
+    '2019-12-06': {'event': 'OPEP+ Cortes', 'desc': 'OPEP+ aumenta cortes de produção em 500.000 barris/dia'},
+    '2020-03-08': {'event': 'Guerra de Preços', 'desc': 'Arábia Saudita inicia guerra de preços após falha em acordo com Rússia'},
+    '2020-03-11': {'event': 'Pandemia COVID-19', 'desc': 'OMS declara pandemia global'},
+    '2020-04-20': {'event': 'WTI Negativo', 'desc': 'Preço do petróleo WTI cai para valores negativos'},
+    '2021-10-04': {'event': 'Crise Energética', 'desc': 'Escassez de gás natural e carvão eleva demanda por petróleo'},
+    '2022-02-24': {'event': 'Invasão da Ucrânia', 'desc': 'Rússia invade a Ucrânia'},
+    '2022-03-31': {'event': 'Liberação Reservas', 'desc': 'EUA anuncia liberação de 180 milhões de barris da reserva estratégica'},
+    '2023-04-02': {'event': 'Corte OPEP+', 'desc': 'OPEP+ anuncia corte surpresa de mais de 1 milhão de barris/dia'},
+    '2023-10-07': {'event': 'Conflito Israel-Hamas', 'desc': 'Início do conflito entre Israel e Hamas'}
+}
+
+def add_events(ax, annotate=True, only_major=False):
+    major_events = ['Primavera Árabe', 'Pandemia COVID-19', 'Invasão da Ucrânia', 'Guerra de Preços']
+    
+    for date, info in events.items():
+        event_date = pd.to_datetime(date)
+        if event_date in df.index or event_date.strftime('%Y-%m-%d') in df.index.strftime('%Y-%m-%d'):
+            if only_major and info['event'] not in major_events:
+                continue
+            idx = df.index.get_indexer([event_date], method='nearest')[0]
+            price = df.iloc[idx]['petrol_price']
+            ax.axvline(x=event_date, color='gray', linestyle='--', alpha=0.7)
+            if annotate:
+                ax.annotate(info['event'], 
+                            xy=(event_date, price),
+                            xytext=(10, 40), textcoords='offset points',
+                            arrowprops=dict(arrowstyle='->', color='black'),
+                            fontsize=9, rotation=45)
 
 with tab1:
     st.header("Brent Oil Price Trends")
+
+    # Lendo e preparando os dados
+    df = data['Close'].reset_index().rename(columns = {'BZ=F':'petrol_price'})
+    df['Date'] = pd.to_datetime(df['Date'])
+    df = df.sort_values(by='Date')
+    df = df.set_index('Date')
     
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=data.index,
-        y=data['Close'],
-        mode='lines',
-        name='Close Price',
-        line=dict(color='#2E86C1')
-    ))
+    ma50 = st.sidebar.slider("Média móvel curta (dias)", 10, 100, 50)
+    ma200 = st.sidebar.slider("Média móvel longa (dias)", 50, 300, 200)
+    show_all_events = st.sidebar.checkbox("Mostrar todos os eventos?", value=False)
     
-    fig.update_layout(
-        title="Historical Brent Oil Prices",
-        xaxis_title="Date",
-        yaxis_title="Price (USD)",
-        template="plotly_white"
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    fig, ax = plt.subplots(figsize=(14, 7))
+    ax.plot(df.index, df['petrol_price'], label='Preço Brent (USD)', color='#1f77b4')
+    ax.plot(df.index, df['ma50'], label=f'MM{ma50}', color='green', linestyle='--')
+    ax.plot(df.index, df['ma200'], label=f'MM{ma200}', color='red', linestyle='--')
+    
+    add_events(ax, only_major=not show_all_events)
+    
+    ax.set_title('📉 Evolução dos Preços do Petróleo Brent', fontsize=16)
+    ax.set_xlabel('Ano')
+    ax.set_ylabel('Preço (USD)')
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    
+    # Eixo x formatado
+    years = mdates.YearLocator()
+    years_fmt = mdates.DateFormatter('%Y')
+    ax.xaxis.set_major_locator(years)
+    ax.xaxis.set_major_formatter(years_fmt)
+    plt.xticks(rotation=45)
+    st.plotly_chart(fig)
+    
+    # --- Estatísticas rápidas
+    st.subheader("📊 Estatísticas Rápidas")
+    col1, col2 = st.columns(2)
+    col1.metric("Preço Atual", f"${df['petrol_price'].iloc[-1]:.2f}")
+    col2.metric("Volatilidade 30d", f"{df['volatility_30d'].iloc[-1]:.2f}")
+    
+    # --- Médias mensais e anuais (opcional)
+    with st.expander("🔍 Ver Médias Mensais e Anuais"):
+        st.line_chart(monthly_avg.rename("Média Mensal"))
+        st.line_chart(yearly_avg.rename("Média Anual"))
 
 with tab2:
     st.header("Price Volatility Analysis")
@@ -80,29 +141,6 @@ with tab2:
         title="30-Day Rolling Volatility",
         xaxis_title="Date",
         yaxis_title="Volatility (%)",
-        template="plotly_white"
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-with tab3:
-    st.header("Seasonal Analysis")
-    
-    # Perform seasonal decomposition
-    decomposition = seasonal_decompose(data['Close'], period=252)
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=decomposition.seasonal.index,
-        y=decomposition.seasonal,
-        mode='lines',
-        name='Seasonal Pattern',
-        line=dict(color='#27AE60')
-    ))
-    
-    fig.update_layout(
-        title="Seasonal Component of Brent Oil Prices",
-        xaxis_title="Date",
-        yaxis_title="Seasonal Effect (USD)",
         template="plotly_white"
     )
     st.plotly_chart(fig, use_container_width=True)
