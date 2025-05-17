@@ -124,23 +124,7 @@ with tab1:
         name=f'MM{ma200}',
         line=dict(color='red', dash='dot')
     ))
-    
-    # Eventos (linhas verticais com anotação como hovertext)
-    major_events = ['Primavera Árabe', 'Pandemia COVID-19', 'Invasão da Ucrânia', 'Guerra de Preços']
-    for date_str, info in events.items():
-        event_date = pd.to_datetime(date_str)
-        if not show_all_events and info["event"] not in major_events:
-            continue
-        if df.index.min() <= event_date <= df.index.max():
-            fig.add_vline(
-                x=event_date,
-                line=dict(color='gray', width=1, dash='dash'),
-                opacity=0.7,
-                annotation_text=info['event'],
-                annotation_position="top right",
-                annotation_font_size=10,
-                annotation_font_color="gray"
-            )
+
     
     # Layout
     fig.update_layout(
