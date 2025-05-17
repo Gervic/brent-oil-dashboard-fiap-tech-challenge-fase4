@@ -297,29 +297,36 @@ with tab2:
             
         # Use monthly average for market phase identification to reduce noise
         bull_markets, bear_markets = identify_market_phases(monthly_avg, threshold=0.2)
-        years = mdates.YearLocator(5)  # every 5 years
-        years_fmt = mdates.DateFormatter('%Y')
         
-        # Plot bull and bear markets
-        plt.figure(figsize=(15, 7))
-        plt.plot(monthly_avg.index, monthly_avg, linewidth=1, color='gray')
+        # Criando gráfico com Plotly
+        fig = go.Figure()
         
-        # Highlight bull markets
-        for i, (start_idx, end_idx, start_date, end_date, start_price, end_price, pct_change) in enumerate(bull_markets):
-            plt.axvspan(start_date, end_date, alpha=0.2, color='green')
+        # Linha do preço
+        fig.add_trace(go.Scatter(x=monthly_avg.index, y=monthly_avg.values,
+                                 mode='lines', name='Preço Médio Mensal', line=dict(color='gray')))
         
-        # Highlight bear markets
-        for i, (start_idx, end_idx, start_date, end_date, start_price, end_price, pct_change) in enumerate(bear_markets):
-            plt.axvspan(start_date, end_date, alpha=0.2, color='red')
+        # Regiões de Bull Markets (verde)
+        for start_idx, end_idx, start_date, end_date, *_ in bull_markets:
+            fig.add_vrect(x0=start_date, x1=end_date, fillcolor="green", opacity=0.2,
+                          line_width=0, annotation_text="Alta", annotation_position="top left")
         
-        plt.title('Ciclos de alta (verde) e baixa (vermelho) do petróleo Brent')
-        plt.xlabel('Data')
-        plt.ylabel('Preço (USD)')
-        plt.grid(True)
-        plt.gca().xaxis.set_major_locator(years)
-        plt.gca().xaxis.set_major_formatter(years_fmt)
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
+        # Regiões de Bear Markets (vermelho)
+        for start_idx, end_idx, start_date, end_date, *_ in bear_markets:
+            fig.add_vrect(x0=start_date, x1=end_date, fillcolor="red", opacity=0.2,
+                          line_width=0, annotation_text="Baixa", annotation_position="top left")
+        
+        # Layout
+        fig.update_layout(
+            title="Ciclos de Alta (verde) e Baixa (vermelho) - Preço do Petróleo Brent",
+            xaxis_title="Data",
+            yaxis_title="Preço (USD)",
+            hovermode="x unified",
+            xaxis=dict(showgrid=True),
+            yaxis=dict(showgrid=True),
+            template="plotly_white"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
         st.markdown("""
         Este gráfico identifica períodos distintos de mercados em alta (verde) e baixa
         (vermelho), definidos como movimentos de pelo menos 20% nos preços:
