@@ -157,6 +157,45 @@ with tab1:
     
     # Mostrar no Streamlit
     st.plotly_chart(fig, use_container_width=True)
+    st.markdown("---")
+
+
+    st.markdown("""
+    Este gráfico principal mostra a trajetória completa dos preços do petróleo Brent
+    ao longo de 15 anos, revelando ciclos dramáticos de alta e baixa:
+    ● Período 2011-2014: Observamos um patamar elevado e relativamente
+    estável de preços (acima de $100), sustentado pela crescente demanda
+    chinesa e pelas tensões geopolíticas durante a Primavera Árabe que
+    reduziram a oferta da Líbia e geraram incertezas sobre outros produtores
+    da região.
+    
+    ● Colapso 2014-2016: Queda acentuada de preços que começou quando a
+    OPEP decidiu não cortar produção em novembro de 2014, preferindo
+    manter participação de mercado frente ao crescimento do xisto
+    americano. A remoção das sanções contra o Irã em janeiro de 2016
+    ampliou a oferta global, pressionando ainda mais os preços para baixo.
+    
+    ● Recuperação 2016-2018: Período de estabilização e recuperação gradual
+    após o histórico Acordo da OPEP de novembro de 2016, quando o cartel
+    concordou em cortar produção pela primeira vez desde 2008, em
+    coordenação com produtores não-OPEP, como a Rússia.
+    
+    ● Choque pandêmico 2020: O colapso mais dramático da série, quando a
+    conjunção da Pandemia COVID-19 e a Guerra de Preços entre Rússia e
+    Arábia Saudita levou a uma queda sem precedentes, chegando ao ponto
+    do WTI americano registrar preços negativos em abril de 2020.
+    
+    ● Recuperação pós-pandemia 2020-2022: Forte ascensão a partir de níveis
+    extremamente baixos, impulsionada pela reabertura econômica global,
+    pela disciplina de produção da OPEP+ e pelos pacotes de estímulo que
+    fomentaram a demanda.
+    
+    ● Crise energética e Guerra na Ucrânia 2021-2022: A Invasão da Ucrânia
+    pela Rússia em fevereiro de 2022 elevou os preços a patamares próximos
+    de $130, refletindo riscos de oferta do segundo maior exportador mundial.
+    Anteriormente, já havia pressão de alta devido à Crise Energética que
+    elevou a demanda por petróleo como substituto do gás natural
+    """)
 
 with tab2:
     st.header("Price Volatility Analysis")
