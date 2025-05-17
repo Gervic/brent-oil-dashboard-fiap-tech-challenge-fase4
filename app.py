@@ -200,7 +200,10 @@ with tab2:
     st.header("Price Volatility Analysis")
     
     # Calculate daily returns and rolling volatility
-    data['Returns'] = data['Close'].pct_change()
+    try:
+        data['Returns'] = data['Close'].pct_change()
+    except:
+        data['Returns'] = data['petrol_price'].pct_change()
     data['Volatility'] = data['Returns'].rolling(window=30).std() * np.sqrt(252) * 100
     
     fig = go.Figure()
