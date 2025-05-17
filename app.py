@@ -192,28 +192,21 @@ with tab1:
     """)
 
 with tab2:
-    st.header("Price Volatility Analysis")
-    
-    # Calculate daily returns and rolling volatility
-    try:
-        data['Returns'] = data['Close'].pct_change()
-    except:
-        data['Returns'] = data['petrol_price'].pct_change()
-    data['Volatility'] = data['Returns'].rolling(window=30).std() * np.sqrt(252) * 100
+    st.header("Volatilidade do preço do petróleo Brent")
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(
-        x=data.index,
-        y=data['Volatility'],
+        x=df.index,
+        y=df['volatility_30d'],
         mode='lines',
         name='30-Day Volatility',
         line=dict(color='#E74C3C')
     ))
     
     fig.update_layout(
-        title="30-Day Rolling Volatility",
-        xaxis_title="Date",
-        yaxis_title="Volatility (%)",
+        title="Desvio padrão móvel de 30 dias",
+        xaxis_title="Data",
+        yaxis_title="Volatilidade",
         template="plotly_white"
     )
     st.plotly_chart(fig, use_container_width=True)
