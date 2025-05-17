@@ -157,17 +157,6 @@ with tab1:
     
     # Mostrar no Streamlit
     st.plotly_chart(fig, use_container_width=True)
-    
-    # --- Estatísticas rápidas
-    st.subheader("📊 Estatísticas Rápidas")
-    col1, col2 = st.columns(2)
-    col1.metric("Preço Atual", f"${df['petrol_price'].iloc[-1]['BZ=F']:.2f}")
-    col2.metric("Volatilidade 30d:", f"{float(df['volatility_30d'].iloc[-1]):.2f}")
-    
-    # --- Médias mensais e anuais (opcional)
-    with st.expander("🔍 Ver Médias Mensais e Anuais"):
-        st.line_chart(monthly_avg.rename("Média Mensal"))
-        st.line_chart(yearly_avg.rename("Média Anual"))
 
 with tab2:
     st.header("Price Volatility Analysis")
