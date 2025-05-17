@@ -4,6 +4,8 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import yfinance as yf
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
