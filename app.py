@@ -37,7 +37,7 @@ def load_data():
 data = load_data()
 
 # Create tabs for different visualizations
-tab1, tab2, tab3 = st.tabs(["Price Trends", "Volatility", "Seasonality", "Forecast"])
+tab1, tab2, tab3 = st.tabs(["Price Trends", "Volatility", "Forecast"])
 
 #Dicionário de Eventos e Função para Anotações
 # Dicionário de eventos geopolíticos e econômicos relevantes
