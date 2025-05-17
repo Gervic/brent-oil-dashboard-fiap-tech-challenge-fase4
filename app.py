@@ -5,7 +5,6 @@ import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime, timedelta
 import yfinance as yf
-from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
