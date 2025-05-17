@@ -99,26 +99,64 @@ with tab1:
     monthly_avg = df['petrol_price'].resample('M').mean()
     yearly_avg = df['petrol_price'].resample('Y').mean()
     
-    fig, ax = plt.subplots(figsize=(14, 7))
-    ax.plot(df.index, df['petrol_price'], label='Preço Brent (USD)', color='#1f77b4')
-    ax.plot(df.index, df['ma50'], label=f'MM{ma50}', color='green', linestyle='--')
-    ax.plot(df.index, df['ma200'], label=f'MM{ma200}', color='red', linestyle='--')
+    fig = go.Figure()
+
+    # Preço do petróleo
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['petrol_price'],
+        mode='lines',
+        name='Preço Brent (USD)',
+        line=dict(color='#1f77b4', width=2)
+    ))
     
-    add_events(ax, only_major=not show_all_events)
+    # Médias móveis
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['ma50'],
+        mode='lines',
+        name=f'MM{ma50}',
+        line=dict(color='green', dash='dash')
+    ))
     
-    ax.set_title('📉 Evolução dos Preços do Petróleo Brent', fontsize=16)
-    ax.set_xlabel('Ano')
-    ax.set_ylabel('Preço (USD)')
-    ax.legend()
-    ax.grid(True, alpha=0.3)
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['ma200'],
+        mode='lines',
+        name=f'MM{ma200}',
+        line=dict(color='red', dash='dot')
+    ))
     
-    # Eixo x formatado
-    years = mdates.YearLocator()
-    years_fmt = mdates.DateFormatter('%Y')
-    ax.xaxis.set_major_locator(years)
-    ax.xaxis.set_major_formatter(years_fmt)
-    plt.xticks(rotation=45)
-    st.plotly_chart(fig)
+    # Eventos (linhas verticais com anotação como hovertext)
+    major_events = ['Primavera Árabe', 'Pandemia COVID-19', 'Invasão da Ucrânia', 'Guerra de Preços']
+    for date_str, info in events.items():
+        event_date = pd.to_datetime(date_str)
+        if not show_all_events and info["event"] not in major_events:
+            continue
+        if df.index.min() <= event_date <= df.index.max():
+            fig.add_vline(
+                x=event_date,
+                line=dict(color='gray', width=1, dash='dash'),
+                opacity=0.7,
+                annotation_text=info['event'],
+                annotation_position="top right",
+                annotation_font_size=10,
+                annotation_font_color="gray"
+            )
+    
+    # Layout
+    fig.update_layout(
+        title="📉 Evolução dos Preços do Petróleo Brent",
+        xaxis_title="Data",
+        yaxis_title="Preço (USD)",
+        template="plotly_white",
+        legend=dict(x=0, y=1),
+        hovermode="x unified",
+        height=600
+    )
+    
+    # Mostrar no Streamlit
+    st.plotly_chart(fig, use_container_width=True)
     
     # --- Estatísticas rápidas
     st.subheader("📊 Estatísticas Rápidas")
@@ -155,7 +193,7 @@ with tab2:
     )
     st.plotly_chart(fig, use_container_width=True)
 
-with tab4:
+with tab3:
     st.header("Price Forecast")
     
     # Prepare data for forecasting
