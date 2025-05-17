@@ -97,13 +97,13 @@ with tab1:
     monthly_avg = df['petrol_price'].resample('M').mean()
     yearly_avg = df['petrol_price'].resample('Y').mean()
 
+    st.markdown("### Métricas")
     col1, col2, col3, col4 = st.columns(4)
     current_price = df['petrol_price'].iloc[-1]
     prev_price = df['petrol_price'].iloc[-2]
     pct_change = (current_price - prev_price) / prev_price * 100
     vol_30d = df['volatility_30d'].iloc[-1]
 
-    st.markdown("### Métricas")
     col1.metric("Preço Atual", f"US$ {current_price:.2f}")
     col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
     col3.metric("%DoD", f"{pct_change:.2f}%")
