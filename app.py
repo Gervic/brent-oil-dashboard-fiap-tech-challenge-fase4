@@ -161,8 +161,8 @@ with tab1:
     # --- Estatísticas rápidas
     st.subheader("📊 Estatísticas Rápidas")
     col1, col2 = st.columns(2)
-    col1.metric("Preço Atual", f"${dff['petrol_price'].iloc[-1]['BZ=F']:.2f}")
-    col2.metric("Volatilidade 30d:", f"{float(dff['volatility_30d'].iloc[-1]):.2f}")
+    col1.metric("Preço Atual", f"${df['petrol_price'].iloc[-1]['BZ=F']:.2f}")
+    col2.metric("Volatilidade 30d:", f"{float(df['volatility_30d'].iloc[-1]):.2f}")
     
     # --- Médias mensais e anuais (opcional)
     with st.expander("🔍 Ver Médias Mensais e Anuais"):
