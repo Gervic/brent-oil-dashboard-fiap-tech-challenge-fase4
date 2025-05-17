@@ -145,6 +145,7 @@ with tab1:
     st.markdown("""
     Este gráfico principal mostra a trajetória completa dos preços do petróleo Brent
     ao longo de 15 anos, revelando ciclos dramáticos de alta e baixa:
+    
     ● Período 2011-2014: Observamos um patamar elevado e relativamente
     estável de preços (acima de $100), sustentado pela crescente demanda
     chinesa e pelas tensões geopolíticas durante a Primavera Árabe que
