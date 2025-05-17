@@ -193,23 +193,107 @@ with tab1:
 
 with tab2:
     st.header("Volatilidade do preço do petróleo Brent")
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=df.index,
-        y=df['volatility_30d'],
-        mode='lines',
-        name='30-Day Volatility',
-        line=dict(color='#E74C3C')
-    ))
-    
-    fig.update_layout(
-        title="Desvio padrão móvel de 30 dias",
-        xaxis_title="Data",
-        yaxis_title="Volatilidade",
-        template="plotly_white"
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown('#### Volatilidade')
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=df.index,
+            y=df['volatility_30d'],
+            mode='lines',
+            name='30-Day Volatility',
+            line=dict(color='#E74C3C')
+        ))
+        
+        fig.update_layout(
+            title="Desvio padrão móvel de 30 dias",
+            xaxis_title="Data",
+            yaxis_title="Volatilidade",
+            template="plotly_white"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    with c2:
+        st.markdown('#### Preços de acordo com as altas/baixas do mercado')
+        monthly_avg = df[petrol_price].resample('M').mean()
+        def identify_market_phases(series, threshold=0.2):
+          bull_markets = []
+          bear_markets = []
+          
+          # Initialize variables
+          in_bull = False
+          in_bear = False
+          start_idx = 0
+          peak = series.iloc[0]
+          trough = series.iloc[0]
+          
+          for i in range(1, len(series)):
+              current_price = series.iloc[i]
+              
+              # Check for bull market
+              if not in_bull and current_price >= trough * (1 + threshold):
+                  if in_bear:
+                      # End of bear market
+                      bear_markets.append((start_idx, i-1, series.index[start_idx], series.index[i-1], 
+                                            peak, trough, (trough - peak) / peak))
+                      in_bear = False
+                  
+                  # Start of bull market
+                  in_bull = True
+                  start_idx = i
+                  trough = current_price
+              
+              # Check for bear market
+              elif not in_bear and current_price <= peak * (1 - threshold):
+                  if in_bull:
+                      # End of bull market
+                      bull_markets.append((start_idx, i-1, series.index[start_idx], series.index[i-1], 
+                                          trough, peak, (peak - trough) / trough))
+                      in_bull = False
+                  
+                  # Start of bear market
+                  in_bear = True
+                  start_idx = i
+                  peak = current_price
+              
+              # Update peak and trough
+              if in_bull and current_price > peak:
+                  peak = current_price
+              elif in_bear and current_price < trough:
+                  trough = current_price
+          
+          # Handle the last phase
+          if in_bull:
+              bull_markets.append((start_idx, len(series)-1, series.index[start_idx], series.index[-1], 
+                                  trough, peak, (peak - trough) / trough))
+          elif in_bear:
+              bear_markets.append((start_idx, len(series)-1, series.index[start_idx], series.index[-1], 
+                                  peak, trough, (trough - peak) / peak))
+          
+          return bull_markets, bear_markets
+            
+        # Use monthly average for market phase identification to reduce noise
+        bull_markets, bear_markets = identify_market_phases(monthly_avg, threshold=0.2)
+        
+        # Plot bull and bear markets
+        plt.figure(figsize=(15, 7))
+        plt.plot(monthly_avg.index, monthly_avg, linewidth=1, color='gray')
+        
+        # Highlight bull markets
+        for i, (start_idx, end_idx, start_date, end_date, start_price, end_price, pct_change) in enumerate(bull_markets):
+            plt.axvspan(start_date, end_date, alpha=0.2, color='green')
+        
+        # Highlight bear markets
+        for i, (start_idx, end_idx, start_date, end_date, start_price, end_price, pct_change) in enumerate(bear_markets):
+            plt.axvspan(start_date, end_date, alpha=0.2, color='red')
+        
+        plt.title('Oil Price with Bull (Green) and Bear (Red) Markets')
+        plt.xlabel('Date')
+        plt.ylabel('Price (USD)')
+        plt.grid(True)
+        plt.gca().xaxis.set_major_locator(years)
+        plt.gca().xaxis.set_major_formatter(years_fmt)
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
 
 with tab3:
     st.header("Price Forecast")
