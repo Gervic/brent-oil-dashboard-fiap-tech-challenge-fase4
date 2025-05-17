@@ -212,9 +212,33 @@ with tab2:
             template="plotly_white"
         )
         st.plotly_chart(fig, use_container_width=True)
+        st.markdown("""
+        O gráfico de volatilidade revela períodos de maior incerteza e instabilidade no
+        mercado:
+        
+        ● 2022: O ano com maior volatilidade média da série histórica, impulsionado
+        pela Invasão da Ucrânia e subsequentes sanções ocidentais ao petróleo
+        russo, além da intervenção dos EUA com a Liberação de Reservas
+        Estratégicas tentando conter a alta de preços.
+        
+        ● 2020: Segundo ano mais volátil, dominado pelo choque da Pandemia
+        COVID-19 e pela Guerra de Preços entre Arábia Saudita e Rússia,
+        resultando em uma combinação catastrófica de colapso de demanda e
+        aumento de oferta.
+        
+        ● 2011-2012: Pico de volatilidade associado à Primavera Árabe e interrupções
+        de fornecimento na Líbia, Síria e outros países produtores da região.
+        
+        ● 2014-2016: Alta volatilidade durante o colapso de preços provocado pela
+        estratégia da OPEP de não cortar produção e pelo excesso de oferta
+        global.
+        
+        A análise deste gráfico mostra claramente que os choques geopolíticos e as
+        mudanças abruptas de política dos principais produtores são os maiores
+        causadores de volatilidade no mercado petrolífero.
+        """)
     with c2:
         st.markdown('#### Preços de acordo com as altas/baixas do mercado')
-        monthly_avg = df[petrol_price].resample('M').mean()
         def identify_market_phases(series, threshold=0.2):
           bull_markets = []
           bear_markets = []
@@ -286,14 +310,41 @@ with tab2:
         for i, (start_idx, end_idx, start_date, end_date, start_price, end_price, pct_change) in enumerate(bear_markets):
             plt.axvspan(start_date, end_date, alpha=0.2, color='red')
         
-        plt.title('Oil Price with Bull (Green) and Bear (Red) Markets')
-        plt.xlabel('Date')
-        plt.ylabel('Price (USD)')
+        plt.title('Ciclos de alta (verde) e baixa (vermelho) do petróleo Brent')
+        plt.xlabel('Data')
+        plt.ylabel('Preço (USD)')
         plt.grid(True)
         plt.gca().xaxis.set_major_locator(years)
         plt.gca().xaxis.set_major_formatter(years_fmt)
         plt.xticks(rotation=45)
         st.pyplot(fig)
+        st.markdown("""
+        Este gráfico identifica períodos distintos de mercados em alta (verde) e baixa
+        (vermelho), definidos como movimentos de pelo menos 20% nos preços:
+        
+        ● Ciclo de Alta 2020-2022: O mais expressivo da série (+183,8%), indo de
+        $43,24 em julho de 2020 a $122,71 em agosto de 2022. Este rally
+        extraordinário foi impulsionado pela combinação de recuperação da
+        demanda pós-pandemia, cortes de produção da OPEP+ e o choque da
+        invasão da Ucrânia.
+        
+        ● Ciclo de Baixa 2020: A queda mais acentuada e rápida (-66,8%), ocorrida
+        entre fevereiro e abril de 2020, quando a Pandemia COVID-19 e a Guerra
+        de Preços causaram disrupção sem precedentes.
+        
+        ● Ciclo de Alta 2016-2018: Um período prolongado de recuperação (+75,0%)
+        que durou 30 meses, começando após o acordo histórico da OPEP+ e
+        sustentado pelo crescimento econômico global sincronizado.
+        
+        ● Ciclo de Baixa 2014-2016: Duas quedas consecutivas e severas (-44,6% e
+        -49,2%) durante um período de 14 meses, quando o mercado ajustou-se
+        ao excesso de oferta do xisto americano e à decisão da OPEP de priorizar
+        a participação de mercado sobre preços.
+        
+        Este gráfico demonstra como os ciclos de petróleo tendem a ser assimétricos: as
+        quedas geralmente são mais rápidas e acentuadas do que as recuperações, que
+        costumam ser mais graduais.
+        """)
 
 with tab3:
     st.header("Price Forecast")
