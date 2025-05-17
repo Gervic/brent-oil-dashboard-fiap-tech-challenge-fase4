@@ -30,9 +30,13 @@ Este dashboard fornece uma análise abrangente dos preços do petróleo Brent, i
 # Function to load data
 @st.cache_data
 def load_data():
-    # Get Brent Oil price data using yfinance
+    # Obtendo os dados hitóricos de preços do petróleo Brent
     ticker = "BZ=F"  # Brent Oil Future ticker
     data = yf.download(ticker, start="2010-01-01", end=datetime.now().strftime("%Y-%m-%d"))
+    # Diagnóstico
+    if data.empty:
+        st.error("❌ Falha ao carregar dados do Yahoo Finance.")
+        st.write("Resposta recebida:", data)
     return data
 
 # Load the data
