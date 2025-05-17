@@ -49,7 +49,7 @@ def load_data():
 data = load_data()
 
 # Create tabs for different visualizations
-tab1, tab2, tab3 = st.tabs(["Price Trends", "Volatility", "Forecast"])
+tab1, tab2, tab3 = st.tabs(["Tendências do preço", "Volatilidade", "Forecast"])
 
 #Dicionário de Eventos e Função para Anotações
 # Dicionário de eventos geopolíticos e econômicos relevantes
@@ -70,7 +70,7 @@ events = {
 }
 
 with tab1:
-    st.header("Brent Oil Price Trends")
+    st.header("Tendências do preço do petróleo Brent")
 
     # Lendo e preparando os dados
     try:
@@ -80,7 +80,10 @@ with tab1:
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.sort_values(by='Date')
     df = df.set_index('Date')
-    
+
+    st.sidebar.header('`Brent Oil Price Analytics`')
+    st.sidebar.image("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.energyintel.com%2F00000196-4013-dcde-adfe-fe5fa4bd0000&psig=AOvVaw1qHimiXZAS9SeXVG2FF95l&ust=1747606481474000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCLDD3tPDq40DFQAAAAAdAAAAABAE", width=100)
+    st.sidebar.info(f"Dados atualizados até: {df.index.max().strftime('%d/%m/%Y')}")
     ma50 = st.sidebar.slider("Média móvel curta (dias)", 10, 100, 50)
     ma200 = st.sidebar.slider("Média móvel longa (dias)", 50, 300, 200)
     show_all_events = st.sidebar.checkbox("Mostrar no gráfico todos os eventos relevantes?", value=False)
@@ -94,11 +97,19 @@ with tab1:
     monthly_avg = df['petrol_price'].resample('M').mean()
     yearly_avg = df['petrol_price'].resample('Y').mean()
 
-    st.write("Shape do df:", data.shape)
-    st.dataframe(data.head())
-    
-    fig = go.Figure()
+    col1, col2, col3, col4 = st.columns(4)
+    current_price = df['petrol_price'].iloc[-1]
+    prev_price = df['petrol_price'].iloc[-2]
+    pct_change = (current_price - prev_price) / prev_price * 100
+    vol_30d = df['volatility_30d'].iloc[-1]
 
+    st.markdown("### Métricas")
+    col1.metric("Preço Atual", f"US$ {current_price:.2f}")
+    col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
+    col3.metric("%DoD", f"{pct_change:.2f}%")
+    col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean():.2f}")
+
+    fig = go.Figure()
     # Preço do petróleo
     fig.add_trace(go.Scatter(
         x=df.index,
