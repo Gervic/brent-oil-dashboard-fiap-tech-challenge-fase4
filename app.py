@@ -81,7 +81,7 @@ with tab1:
     st.header("Brent Oil Price Trends")
 
     # Lendo e preparando os dados
-    df = data['Close'].reset_index().rename(columns = {'BZ=F':'petrol_price'})
+    df = data[['Close']].reset_index().rename(columns={'Close': 'petrol_price'})
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.sort_values(by='Date')
     df = df.set_index('Date')
