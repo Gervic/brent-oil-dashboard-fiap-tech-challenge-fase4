@@ -30,14 +30,20 @@ Este dashboard fornece uma análise abrangente dos preços do petróleo Brent, i
 # Function to load data
 @st.cache_data
 def load_data():
-    # Obtendo os dados hitóricos de preços do petróleo Brent
-    ticker = "BZ=F"  # Brent Oil Future ticker
+    # Obter dados do Brent do yfinance
+    ticker = "BZ=F"  # Código do Brent 
     data = yf.download(ticker, start="2010-01-01", end=datetime.now().strftime("%Y-%m-%d"))
     # Diagnóstico
     if data.empty:
-        st.error("❌ Falha ao carregar dados do Yahoo Finance.")
-        st.write("Resposta recebida:", data)
-    return data
+        st.error("❌ Falha ao carregar dados do Yahoo Finance")
+        raw_data_link = 'https://raw.githubusercontent.com/Gervic/brent-oil-dashboard-fiap-tech-challenge-fase4/refs/heads/main/petrol_price_data.csv'
+        raw_data = pd.read_csv(raw_data_link, sep=';')
+        brent_data = raw_data[['Date', 'petrol_price']]
+        brent_data['petrol_price'] = brent_data['petrol_price'].str.replace(',', '.').astype(float)
+        st.info('Dados carregados da base histórica disponível no Github')
+        return brent_data
+    else:
+        return data
 
 # Load the data
 data = load_data()
@@ -67,7 +73,10 @@ with tab1:
     st.header("Brent Oil Price Trends")
 
     # Lendo e preparando os dados
-    df = data[['Close']].reset_index().rename(columns={'Close': 'petrol_price'})
+    try:
+        df = data[['Close']].reset_index().rename(columns={'Close': 'petrol_price'})
+    except:
+        df = data.copy()
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.sort_values(by='Date')
     df = df.set_index('Date')
