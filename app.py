@@ -82,7 +82,7 @@ with tab1:
     df = df.set_index('Date')
 
     st.sidebar.header('`Brent Oil Price Analytics`')
-    st.sidebar.image("https://cdn.pixabay.com/photo/2012/04/02/13/48/oil-24710_1280.png", width=100)
+    st.sidebar.image("https://cdn.pixabay.com/photo/2016/03/27/22/16/pumpjack-1289654_1280.jpg", width=100)
     st.sidebar.info(f"Dados atualizados até: {df.index.max().strftime('%d/%m/%Y')}")
     ma50 = st.sidebar.slider("Média móvel curta (dias)", 10, 100, 50)
     ma200 = st.sidebar.slider("Média móvel longa (dias)", 50, 300, 200)
