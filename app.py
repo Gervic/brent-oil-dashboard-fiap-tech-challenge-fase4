@@ -89,6 +89,15 @@ with tab1:
     ma50 = st.sidebar.slider("Média móvel curta (dias)", 10, 100, 50)
     ma200 = st.sidebar.slider("Média móvel longa (dias)", 50, 300, 200)
     show_all_events = st.sidebar.checkbox("Mostrar todos os eventos?", value=False)
+
+    # Cálculos
+    df['volatility_30d'] = df['petrol_price'].rolling(window=30).std()
+    df['ma50'] = df['petrol_price'].rolling(window=ma50).mean()
+    df['ma200'] = df['petrol_price'].rolling(window=ma200).mean()
+    df['price_change'] = df['petrol_price'].diff()
+    df['price_pct_change'] = df['petrol_price'].pct_change() * 100
+    monthly_avg = df['petrol_price'].resample('M').mean()
+    yearly_avg = df['petrol_price'].resample('Y').mean()
     
     fig, ax = plt.subplots(figsize=(14, 7))
     ax.plot(df.index, df['petrol_price'], label='Preço Brent (USD)', color='#1f77b4')
