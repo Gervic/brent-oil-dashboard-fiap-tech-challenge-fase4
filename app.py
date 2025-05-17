@@ -18,13 +18,13 @@ st.set_page_config(
 )
 
 # Title and description
-st.title("🛢️ Brent Oil Price Analysis Dashboard")
+st.title("🛢️ Dashboard de análise do preço do petróleo Brent")
 st.markdown("""
-This dashboard provides comprehensive analysis of Brent Oil prices, including:
-- Historical price trends
-- Price volatility
-- Seasonal patterns
-- Price forecasting
+Este dashboard fornece uma análise abrangente dos preços do petróleo Brent, incluindo:
+- Tendência histórica
+- Volatilidade dos preços
+- Padrões sazonais
+- Forecast do preço do próximo dia
 """)
 
 # Function to load data
@@ -59,24 +59,6 @@ events = {
     '2023-10-07': {'event': 'Conflito Israel-Hamas', 'desc': 'Início do conflito entre Israel e Hamas'}
 }
 
-def add_events(ax, annotate=True, only_major=False):
-    major_events = ['Primavera Árabe', 'Pandemia COVID-19', 'Invasão da Ucrânia', 'Guerra de Preços']
-    
-    for date, info in events.items():
-        event_date = pd.to_datetime(date)
-        if event_date in df.index or event_date.strftime('%Y-%m-%d') in df.index.strftime('%Y-%m-%d'):
-            if only_major and info['event'] not in major_events:
-                continue
-            idx = df.index.get_indexer([event_date], method='nearest')[0]
-            price = df.iloc[idx]['petrol_price']
-            ax.axvline(x=event_date, color='gray', linestyle='--', alpha=0.7)
-            if annotate:
-                ax.annotate(info['event'], 
-                            xy=(event_date, price),
-                            xytext=(10, 40), textcoords='offset points',
-                            arrowprops=dict(arrowstyle='->', color='black'),
-                            fontsize=9, rotation=45)
-
 with tab1:
     st.header("Brent Oil Price Trends")
 
@@ -88,7 +70,7 @@ with tab1:
     
     ma50 = st.sidebar.slider("Média móvel curta (dias)", 10, 100, 50)
     ma200 = st.sidebar.slider("Média móvel longa (dias)", 50, 300, 200)
-    show_all_events = st.sidebar.checkbox("Mostrar todos os eventos?", value=False)
+    show_all_events = st.sidebar.checkbox("Mostrar no gráfico todos os eventos relevantes?", value=False)
 
     # Cálculos
     df['volatility_30d'] = df['petrol_price'].rolling(window=30).std()
