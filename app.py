@@ -72,7 +72,7 @@ with tab1:
 
     # Lendo e preparando os dados
     try:
-        df = data[['Close']].reset_index().rename(columns={'Close': 'petrol_price'})
+        df = data[['Close']].reset_index().rename(columns={'Close': 'petrol_price', 'BZ=F': 'petrol_price'})
     except:
         df = data.copy()
     df['Date'] = pd.to_datetime(df['Date'])
