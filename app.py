@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import yfinance as yf
 import requests
+import pickle
+import os
 
 # Page configuration
 st.set_page_config(
