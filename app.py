@@ -88,7 +88,6 @@ with tab1:
     st.sidebar.info(f"Dados atualizados até: {df.index.max().strftime('%d/%m/%Y')}")
     ma50 = st.sidebar.slider("Média móvel curta (dias)", 10, 100, 50)
     ma200 = st.sidebar.slider("Média móvel longa (dias)", 50, 300, 200)
-    show_all_events = st.sidebar.checkbox("Mostrar no gráfico todos os eventos relevantes?", value=False)
 
     # Cálculos
     df['volatility_30d'] = df['petrol_price'].rolling(window=30).std()
