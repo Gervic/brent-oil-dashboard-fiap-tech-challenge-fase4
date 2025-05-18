@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import yfinance as yf
+import requests
 
 # Page configuration
 st.set_page_config(
