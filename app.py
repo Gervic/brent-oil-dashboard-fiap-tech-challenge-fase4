@@ -101,11 +101,16 @@ with tab1:
     prev_price = df['petrol_price'].iloc[-2]
     pct_change = (current_price - prev_price) / prev_price * 100
     vol_30d = df['volatility_30d'].iloc[-1]
-
-    col1.metric("Preço Atual", f"US$ {current_price:.2f}")
-    col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
-    col3.metric("%DoD", f"{pct_change:.2f}%")
-    col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean():.2f}")
+    try:
+        col1.metric("Preço Atual", f"US$ {current_price:.2f}")
+        col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
+        col3.metric("%DoD", f"{pct_change:.2f}%")
+        col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean():.2f}")
+    except:
+        col1.metric("Preço Atual", f"US$ {current_price['BZ=F']:.2f}")
+        col2.metric("Preço Anterior", f"US$ {prev_price['BZ=F']:.2f}")
+        col3.metric("%DoD", f"{pct_change['BZ=F']:.2f}%")
+        col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean()['BZ=F']:.2f}")
     
     fig = go.Figure()
     # Preço do petróleo
