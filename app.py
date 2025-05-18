@@ -98,7 +98,7 @@ with tab1:
     yearly_avg = df['petrol_price'].resample('Y').mean()
 
     st.markdown("### Métricas")
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    col1, col2, col3, col4 = st.columns(4)
     current_price = df['petrol_price'].iloc[-1]
     prev_price = df['petrol_price'].iloc[-2]
     pct_change = (current_price - prev_price) / prev_price * 100
@@ -108,169 +108,169 @@ with tab1:
     col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
     col3.metric("%DoD", f"{pct_change:.2f}%")
     col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean():.2f}")
-    with col5:
-        fig = go.Figure()
-        # Preço do petróleo
-        fig.add_trace(go.Scatter(
-            x=df.index,
-            y=df['petrol_price'],
-            mode='lines',
-            name='Preço Brent (USD)',
-            line=dict(color='#1f77b4', width=2)
-        ))
-        
-        # Médias móveis
-        fig.add_trace(go.Scatter(
-            x=df.index,
-            y=df['ma50'],
-            mode='lines',
-            name=f'MM{ma50}',
-            line=dict(color='green', dash='dash')
-        ))
-        
-        fig.add_trace(go.Scatter(
-            x=df.index,
-            y=df['ma200'],
-            mode='lines',
-            name=f'MM{ma200}',
-            line=dict(color='red', dash='dot')
-        ))
     
-        
-        # Layout
-        fig.update_layout(
-            title="📉 Evolução dos Preços do Petróleo Brent",
-            xaxis_title="Data",
-            yaxis_title="Preço (USD)",
-            template="plotly_white",
-            legend=dict(x=0, y=1),
-            hovermode="x unified",
-            height=600
-        )
-        
-        # Mostrar no Streamlit
-        st.plotly_chart(fig, use_container_width=True)
-        st.markdown("---")
+    fig = go.Figure()
+    # Preço do petróleo
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['petrol_price'],
+        mode='lines',
+        name='Preço Brent (USD)',
+        line=dict(color='#1f77b4', width=2)
+    ))
     
+    # Médias móveis
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['ma50'],
+        mode='lines',
+        name=f'MM{ma50}',
+        line=dict(color='green', dash='dash')
+    ))
     
-        st.markdown("""
-        Este gráfico principal mostra a trajetória completa dos preços do petróleo Brent
-        ao longo de 15 anos, revelando ciclos dramáticos de alta e baixa:
-        
-        ● Período 2011-2014: Observamos um patamar elevado e relativamente
-        estável de preços (acima de $100), sustentado pela crescente demanda
-        chinesa e pelas tensões geopolíticas durante a Primavera Árabe que
-        reduziram a oferta da Líbia e geraram incertezas sobre outros produtores
-        da região.
-        
-        ● Colapso 2014-2016: Queda acentuada de preços que começou quando a
-        OPEP decidiu não cortar produção em novembro de 2014, preferindo
-        manter participação de mercado frente ao crescimento do xisto
-        americano. A remoção das sanções contra o Irã em janeiro de 2016
-        ampliou a oferta global, pressionando ainda mais os preços para baixo.
-        
-        ● Recuperação 2016-2018: Período de estabilização e recuperação gradual
-        após o histórico Acordo da OPEP de novembro de 2016, quando o cartel
-        concordou em cortar produção pela primeira vez desde 2008, em
-        coordenação com produtores não-OPEP, como a Rússia.
-        
-        ● Choque pandêmico 2020: O colapso mais dramático da série, quando a
-        conjunção da Pandemia COVID-19 e a Guerra de Preços entre Rússia e
-        Arábia Saudita levou a uma queda sem precedentes, chegando ao ponto
-        do WTI americano registrar preços negativos em abril de 2020.
-        
-        ● Recuperação pós-pandemia 2020-2022: Forte ascensão a partir de níveis
-        extremamente baixos, impulsionada pela reabertura econômica global,
-        pela disciplina de produção da OPEP+ e pelos pacotes de estímulo que
-        fomentaram a demanda.
-        
-        ● Crise energética e Guerra na Ucrânia 2021-2022: A Invasão da Ucrânia
-        pela Rússia em fevereiro de 2022 elevou os preços a patamares próximos
-        de $130, refletindo riscos de oferta do segundo maior exportador mundial.
-        Anteriormente, já havia pressão de alta devido à Crise Energética que
-        elevou a demanda por petróleo como substituto do gás natural
-        """)
-    with col6:
-        df_monthly = df.copy()
-        df_monthly["month"] = df_monthly.index.month
-        df_monthly["year"] = df_monthly.index.year
-        
-        # Boxplot da sazonalidade mensal com Plotly Express
-        fig = px.box(df_monthly, x="month", y="petrol_price", points="outliers",
-                     labels={"month": "Mês", "petrol_price": "Preço (USD)"},
-                     category_orders={"month": list(range(1, 13))},
-                     title="Sazonalidade Mensal dos Preços do Petróleo Brent (2010-2025)")
-        
-        # Cálculo da média mensal
-        monthly_means = df_monthly.groupby("month")["petrol_price"].mean()
-        
-        # Adiciona linha de médias mensais
-        fig.add_trace(go.Scatter(
-            x=list(range(1, 13)),
-            y=monthly_means.values,
-            mode="lines+markers",
-            line=dict(color="red", width=3),
-            marker=dict(size=8),
-            name="Média Mensal"
-        ))
-        
-        # Adiciona anotações
-        fig.add_annotation(
-            x=12,
-            y=monthly_means[12],
-            text="Maior demanda por<br>aquecimento<br>Hemisfério Norte",
-            showarrow=True,
-            arrowhead=1,
-            ax=30,
-            ay=-30,
-            bgcolor="white"
-        )
-        
-        fig.add_annotation(
-            x=7,
-            y=monthly_means[7],
-            text="Temporada de<br>viagens de verão<br>Hemisfério Norte",
-            showarrow=True,
-            arrowhead=1,
-            ax=50,
-            ay=50,
-            bgcolor="white"
-        )
-        
-        # Customizações de layout
-        fig.update_layout(
-            xaxis=dict(
-                tickmode="array",
-                tickvals=list(range(1, 13)),
-                ticktext=['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-                          'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-            ),
-            yaxis_title="Preço (USD)",
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-            template="plotly_white"
-        )
-        
-        # Mostrar no Streamlit
-        st.plotly_chart(fig, use_container_width=True)
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['ma200'],
+        mode='lines',
+        name=f'MM{ma200}',
+        line=dict(color='red', dash='dot')
+    ))
 
-        st.markdown("""
-        A análise de sazonalidade revela padrões mensais que persistem apesar da alta
-        volatilidade do mercado:
-        
-        ● Inverno no Hemisfério Norte (novembro-fevereiro): Tendência de preços
-        mais altos devido à maior demanda para aquecimento, que complementa
-        o consumo regular para transporte e outros usos.
-        
-        ● Verão no Hemisfério Norte (junho-agosto): Leve aumento de preços
-        associado à temporada de viagens, quando aumenta o consumo de
-        combustíveis para transporte.
-        
-        ● Transições sazonais (março-abril e setembro-outubro): Períodos de
-        relativa fraqueza de preços, quando a demanda sazonal diminui.
-        A análise boxplot mostra também a alta variabilidade dentro de cada mês,
-        indicando que fatores fundamentais e geopolíticos frequentemente superam os
-        padrões sazonais.
-        """)
+    
+    # Layout
+    fig.update_layout(
+        title="📉 Evolução dos Preços do Petróleo Brent",
+        xaxis_title="Data",
+        yaxis_title="Preço (USD)",
+        template="plotly_white",
+        legend=dict(x=0, y=1),
+        hovermode="x unified",
+        height=600
+    )
+    
+    # Mostrar no Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+    st.markdown("---")
+
+
+    st.markdown("""
+    Este gráfico principal mostra a trajetória completa dos preços do petróleo Brent
+    ao longo de 15 anos, revelando ciclos dramáticos de alta e baixa:
+    
+    ● Período 2011-2014: Observamos um patamar elevado e relativamente
+    estável de preços (acima de $100), sustentado pela crescente demanda
+    chinesa e pelas tensões geopolíticas durante a Primavera Árabe que
+    reduziram a oferta da Líbia e geraram incertezas sobre outros produtores
+    da região.
+    
+    ● Colapso 2014-2016: Queda acentuada de preços que começou quando a
+    OPEP decidiu não cortar produção em novembro de 2014, preferindo
+    manter participação de mercado frente ao crescimento do xisto
+    americano. A remoção das sanções contra o Irã em janeiro de 2016
+    ampliou a oferta global, pressionando ainda mais os preços para baixo.
+    
+    ● Recuperação 2016-2018: Período de estabilização e recuperação gradual
+    após o histórico Acordo da OPEP de novembro de 2016, quando o cartel
+    concordou em cortar produção pela primeira vez desde 2008, em
+    coordenação com produtores não-OPEP, como a Rússia.
+    
+    ● Choque pandêmico 2020: O colapso mais dramático da série, quando a
+    conjunção da Pandemia COVID-19 e a Guerra de Preços entre Rússia e
+    Arábia Saudita levou a uma queda sem precedentes, chegando ao ponto
+    do WTI americano registrar preços negativos em abril de 2020.
+    
+    ● Recuperação pós-pandemia 2020-2022: Forte ascensão a partir de níveis
+    extremamente baixos, impulsionada pela reabertura econômica global,
+    pela disciplina de produção da OPEP+ e pelos pacotes de estímulo que
+    fomentaram a demanda.
+    
+    ● Crise energética e Guerra na Ucrânia 2021-2022: A Invasão da Ucrânia
+    pela Rússia em fevereiro de 2022 elevou os preços a patamares próximos
+    de $130, refletindo riscos de oferta do segundo maior exportador mundial.
+    Anteriormente, já havia pressão de alta devido à Crise Energética que
+    elevou a demanda por petróleo como substituto do gás natural
+    """)
+ 
+    df_monthly = df.copy()
+    df_monthly["month"] = df_monthly.index.month
+    df_monthly["year"] = df_monthly.index.year
+    
+    # Boxplot da sazonalidade mensal com Plotly Express
+    fig = px.box(df_monthly, x="month", y="petrol_price", points="outliers",
+                 labels={"month": "Mês", "petrol_price": "Preço (USD)"},
+                 category_orders={"month": list(range(1, 13))},
+                 title="Sazonalidade Mensal dos Preços do Petróleo Brent (2010-2025)")
+    
+    # Cálculo da média mensal
+    monthly_means = df_monthly.groupby("month")["petrol_price"].mean()
+    
+    # Adiciona linha de médias mensais
+    fig.add_trace(go.Scatter(
+        x=list(range(1, 13)),
+        y=monthly_means.values,
+        mode="lines+markers",
+        line=dict(color="red", width=3),
+        marker=dict(size=8),
+        name="Média Mensal"
+    ))
+    
+    # Adiciona anotações
+    fig.add_annotation(
+        x=12,
+        y=monthly_means[12],
+        text="Maior demanda por<br>aquecimento<br>Hemisfério Norte",
+        showarrow=True,
+        arrowhead=1,
+        ax=30,
+        ay=-30,
+        bgcolor="white"
+    )
+    
+    fig.add_annotation(
+        x=7,
+        y=monthly_means[7],
+        text="Temporada de<br>viagens de verão<br>Hemisfério Norte",
+        showarrow=True,
+        arrowhead=1,
+        ax=50,
+        ay=50,
+        bgcolor="white"
+    )
+    
+    # Customizações de layout
+    fig.update_layout(
+        xaxis=dict(
+            tickmode="array",
+            tickvals=list(range(1, 13)),
+            ticktext=['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                      'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        ),
+        yaxis_title="Preço (USD)",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        template="plotly_white"
+    )
+    
+    # Mostrar no Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("""
+    A análise de sazonalidade revela padrões mensais que persistem apesar da alta
+    volatilidade do mercado:
+    
+    ● Inverno no Hemisfério Norte (novembro-fevereiro): Tendência de preços
+    mais altos devido à maior demanda para aquecimento, que complementa
+    o consumo regular para transporte e outros usos.
+    
+    ● Verão no Hemisfério Norte (junho-agosto): Leve aumento de preços
+    associado à temporada de viagens, quando aumenta o consumo de
+    combustíveis para transporte.
+    
+    ● Transições sazonais (março-abril e setembro-outubro): Períodos de
+    relativa fraqueza de preços, quando a demanda sazonal diminui.
+    A análise boxplot mostra também a alta variabilidade dentro de cada mês,
+    indicando que fatores fundamentais e geopolíticos frequentemente superam os
+    padrões sazonais.
+    """)
 
 with tab2:
     st.header("Volatilidade do preço do petróleo Brent")
