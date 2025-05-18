@@ -437,7 +437,22 @@ with tab2:
         """)
 
 with tab3:
-    st.header("Price Forecast")
+    st.header("Previsao do Preço do Petroleo Brent")
+    model = joblib.load('prophet_model.pkl')
+    days = st.number_input("Quantos dias para prever?", min_value=1, max_value=365, value=7)
+    
+    future_dates = model.make_future_dataframe(periods=days)
+    
+    # Gerar previsão
+    forecast = model.predict(future_dates)
+    
+    # Exibir resultado
+    st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
+    st.write(forecast[['ds', 'yhat']].tail(days))
+    
+    # Plotar previsão
+    plot = plot_plotly(model, forecast)
+    st.plotly_chart(plot)
     
 
 # Add footer
