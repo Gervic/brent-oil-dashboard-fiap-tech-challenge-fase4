@@ -9,6 +9,7 @@ import matplotlib.dates as mdates
 import yfinance as yf
 import requests
 import pickle
+import joblib
 import os
 
 # Page configuration
@@ -441,23 +442,8 @@ with tab3:
     st.header("Previsao do Preço do Petroleo Brent")
     @st.cache_resource
     def load_model():
-        url = "https://raw.githubusercontent.com/Gervic/brent-oil-dashboard-fiap-tech-challenge-fase4/refs/heads/main/prophet_model.pkl"
-        local_path = "main/prophet_model.pkl"
-        try:
-            response = requests.get(url, timeout=10)
-            response.raise_for_status()
-            model = pickle.loads(response.content)
-            st.success("🔗 Modelo carregado do GitHub com sucesso!")
-        except Exception as e:
-            st.warning(f"❌ Falha ao carregar do GitHub: {e}\nCarregando modelo local...")
-            if os.path.exists(local_path):
-                with open(local_path, "rb") as f:
-                    model = pickle.load(f)
-                st.success("📁 Modelo carregado localmente.")
-            else:
-                st.error("🚨 Nenhum modelo disponível.")
-                model = None
-        return model
+        return joblib.load('prophet_model.pkl')
+        
     model = load_model()
     days = st.number_input("Quantos dias para prever?", min_value=1, max_value=365, value=7)
     
