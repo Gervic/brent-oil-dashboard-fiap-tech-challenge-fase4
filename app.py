@@ -458,7 +458,7 @@ with tab3:
     
     # Plotar previsão
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df['ds'], y=df['y'], mode='lines', name='Histórico'))
+    fig.add_trace(go.Scatter(x=df.index, y=df['petrol_price'], mode='lines', name='Histórico'))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], mode='lines', name='Previsão'))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], mode='lines', name='Limite superior', line=dict(dash='dot'), opacity=0.3))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], mode='lines', name='Limite inferior', line=dict(dash='dot'), opacity=0.3))
