@@ -72,7 +72,7 @@ with tab1:
 
     # Lendo e preparando os dados
     try:
-        df = data[['Close']].reset_index().rename(columns={'Close': 'petrol_price', 'BZ=F': 'petrol_price'})
+        df = data['Close'].reset_index().rename(columns={'BZ=F': 'petrol_price'})
     except:
         df = data.copy()
     df['Date'] = pd.to_datetime(df['Date'])
@@ -101,17 +101,12 @@ with tab1:
     prev_price = df['petrol_price'].iloc[-2]
     pct_change = (current_price - prev_price) / prev_price * 100
     vol_30d = df['volatility_30d'].iloc[-1]
-    try:
-        col1.metric("Preço Atual", f"US$ {current_price:.2f}")
-        col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
-        col3.metric("%DoD", f"{pct_change:.2f}%")
-        col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean():.2f}")
-    except:
-        col1.metric("Preço Atual", f"US$ {current_price['BZ=F']:.2f}")
-        col2.metric("Preço Anterior", f"US$ {prev_price['BZ=F']:.2f}")
-        col3.metric("%DoD", f"{pct_change['BZ=F']:.2f}%")
-        col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean()['BZ=F']:.2f}")
     
+    col1.metric("Preço Atual", f"US$ {current_price:.2f}")
+    col2.metric("Preço Anterior", f"US$ {prev_price:.2f}")
+    col3.metric("%DoD", f"{pct_change:.2f}%")
+    col4.metric("Média 30 dias", f"US$ {df['petrol_price'].tail(30).mean():.2f}")
+          
     fig = go.Figure()
     # Preço do petróleo
     fig.add_trace(go.Scatter(
