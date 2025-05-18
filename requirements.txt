@@ -7,3 +7,4 @@ statsmodels==0.14.4
 matplotlib==3.10.3
 prophet==1.1.5
 joblib==1.5.0
+requests>=2.25.1
