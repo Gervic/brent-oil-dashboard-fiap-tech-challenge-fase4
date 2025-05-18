@@ -457,8 +457,14 @@ with tab3:
     st.write(forecast[['ds', 'yhat']].tail(days))
     
     # Plotar previsão
-    plot = plot_plotly(model, forecast)
-    st.plotly_chart(plot)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df['ds'], y=df['y'], mode='lines', name='Histórico'))
+    fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], mode='lines', name='Previsão'))
+    fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], mode='lines', name='Limite superior', line=dict(dash='dot'), opacity=0.3))
+    fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], mode='lines', name='Limite inferior', line=dict(dash='dot'), opacity=0.3))
+    
+    fig.update_layout(title="Previsão com Prophet", xaxis_title="Data", yaxis_title="Valor", template="plotly_white")
+    st.plotly_chart(fig, use_container_width=True)
     
 
 # Add footer
