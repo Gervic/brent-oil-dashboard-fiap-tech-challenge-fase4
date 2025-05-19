@@ -453,7 +453,7 @@ with tab3:
     
     # Exibir resultado
     st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
-    st.write(forecast[['ds', 'yhat']].tail(days))
+    st.write(forecast[['ds', 'yhat']].rename(columns={'ds': 'data', 'yhat':'preço predito'}).tail(days))
     
     # Plotar previsão
     fig = go.Figure()
