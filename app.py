@@ -51,7 +51,7 @@ def load_data():
 data = load_data()
 
 # Create tabs for different visualizations
-tab1, tab2, tab3 = st.tabs(["Tendências do preço", "Volatilidade", "Forecast"])
+tab1, tab2, tab, tab3 = st.tabs(["Tendências do preço", "Volatilidade", "Insights", "Forecast"])
 
 #Dicionário de Eventos e Função para Anotações
 # Dicionário de eventos geopolíticos e econômicos relevantes
@@ -484,6 +484,363 @@ with tab2:
         quedas geralmente são mais rápidas e acentuadas do que as recuperações, que
         costumam ser mais graduais.
         """)
+with tab:
+    # Carregando eventos importantes e insights
+    def get_events_insights():
+        """Retorna eventos importantes e seus insights"""
+        return {
+            'covid': {
+                'title': 'Pandemia de COVID-19 (2020)',
+                'date': '2020-03-11',
+                'event_end': '2020-06-01',
+                'description': '''
+                A pandemia de COVID-19 causou o maior choque de preço observado nos dados recentes, com queda de 66,8% entre fevereiro e abril de 2020.
+                
+                **Causas principais:**
+                - Lockdowns globais reduziram drasticamente a demanda por transporte
+                - Guerra de preços entre Rússia e Arábia Saudita agravou a situação
+                - Capacidade de armazenamento global chegou próxima ao limite
+                
+                Em 22 de abril de 2020, vimos uma variação diária extraordinária de +51%, refletindo a extrema volatilidade do mercado.
+                A queda nos preços levou o petróleo WTI americano a registrar preços negativos pela primeira vez na história.
+                ''',
+                'date_range': ['2020-01-01', '2020-07-31']
+            },
+            'recovery': {
+                'title': 'Recuperação Pós-Pandemia (2020-2022)',
+                'date': '2020-07-31',
+                'event_end': '2022-08-31',
+                'description': '''
+                A mais expressiva alta identificada na série histórica ocorreu entre julho de 2020 e agosto de 2022, com valorização de 183,8%.
+                
+                **Fatores de impulso:**
+                - Reabertura das economias globais
+                - Cortes de produção coordenados pela OPEP+
+                - Retomada da demanda enquanto a oferta permanecia restrita
+                - Tensões geopolíticas crescentes
+                
+                Este período demonstrou como os preços do petróleo podem se recuperar rapidamente após um choque, especialmente quando há ação coordenada entre os principais produtores.
+                ''',
+                'date_range': ['2020-07-01', '2022-08-31']
+            },
+            'crisis2014': {
+                'title': 'Crise Financeira de 2014-2016',
+                'date': '2014-11-27',
+                'event_end': '2016-02-29',
+                'description': '''
+                Entre outubro de 2014 e fevereiro de 2016, o preço do petróleo sofreu uma queda prolongada e significativa, com duas fases distintas:
+                - Primeira queda de 44,6% (out/2014 a abr/2015)
+                - Segunda queda de 49,2% (jun/2015 a fev/2016)
+                
+                **Este período foi marcado por:**
+                - Excesso de oferta devido ao boom do xisto nos EUA
+                - Desaceleração da economia chinesa
+                - Decisão da OPEP de não reduzir a produção para defender participação de mercado
+                - Levantamento das sanções contra o Irã, aumentando a oferta global
+                
+                A queda prolongada levou a grandes cortes de investimentos em exploração e produção, configurando as bases para a recuperação dos preços nos anos seguintes.
+                ''',
+                'date_range': ['2014-10-01', '2016-03-31']
+            },
+            'ukraine': {
+                'title': 'Guerra Russo-Ucraniana (2022)',
+                'date': '2022-02-24',
+                'event_end': '2022-06-30',
+                'description': '''
+                O ano de 2022 apresentou a maior volatilidade da série histórica. A invasão da Ucrânia pela Rússia em fevereiro de 2022 impulsionou o preço do petróleo a máximas próximas de $130.
+                
+                **Fatores que impactaram o mercado:**
+                - Temores de sanções aos suprimentos russos (segundo maior exportador mundial)
+                - Preocupações com a segurança energética europeia
+                - Interrupções na infraestrutura de transporte no Mar Negro
+                
+                Em resposta à alta, os EUA anunciaram em março a maior liberação de reservas estratégicas da história, liberando 180 milhões de barris para tentar conter os preços.
+                ''',
+                'date_range': ['2022-01-01', '2022-08-31']
+            },
+            'arab_spring': {
+                'title': 'Primavera Árabe (2011)',
+                'date': '2011-03-15',
+                'event_end': '2011-08-31',
+                'description': '''
+                Em 2011, identificamos um período de alta volatilidade e preços elevados, com o petróleo alcançando $126,64 em maio de 2011. 
+                
+                **Fatores de impacto:**
+                - Revoltas políticas no Oriente Médio e Norte da África (Primavera Árabe)
+                - Interrupção da produção líbia (perda de aproximadamente 1,6 milhão de barris por dia)
+                - Temores de contágio da instabilidade para outros produtores importantes da região
+                
+                Este evento demonstrou como instabilidade política em regiões produtoras chave pode rapidamente elevar os preços, mesmo sem grande interrupção da oferta global.
+                ''',
+                'date_range': ['2011-01-01', '2011-12-31']
+            },
+            'energy_transition': {
+                'title': 'Transição Energética e Padrões Sazonais',
+                'date': '',
+                'event_end': '',
+                'description': '''
+                A análise dos dados revela que a volatilidade do petróleo está aumentando nas últimas décadas, apesar de períodos de relativa estabilidade.
+                
+                **Fatores relevantes:**
+                - Mudança gradual para energias renováveis alterando o balanço tradicional de oferta e demanda
+                - Crescente papel de eventos climáticos extremos na determinação dos preços
+                - Padrão sazonal moderado, com preços geralmente mais altos no inverno do hemisfério norte e queda na primavera
+                
+                A transição energética global está criando um novo paradigma para o mercado de petróleo, com investimentos reduzidos em novos projetos e maior incerteza sobre a demanda futura.
+                ''',
+                'date_range': ['2010-01-01', '2025-05-02']
+            }
+        }
+    
+    # Carregando eventos
+    events_insights = get_events_insights()
+    
+    # Título da página
+    st.header("🔍 Insights Geopolíticos e Econômicos")
+    st.markdown("""
+    Explore os principais eventos que impactaram o mercado de petróleo e compreenda as conexões
+    entre situações geopolíticas, crises econômicas e a dinâmica de preços do petróleo Brent.
+    """)
+    
+    # Seleção de insights
+    st.subheader("Selecione um evento para análise detalhada")
+    
+    # Criando uma visão geral dos eventos em linha do tempo
+    fig = go.Figure()
+    
+    # Adicionando linha para o preço
+    fig.add_trace(go.Scatter(
+        x=df.index,
+        y=df['petrol_price'],
+        mode='lines',
+        name='Preço Brent',
+        line=dict(color='royalblue', width=2)
+    ))
+    
+    # Adicionando marcadores para eventos importantes
+    for key, event in events_insights.items():
+        if event['date']:  # Verifica se há uma data específica
+            event_date = pd.to_datetime(event['date'])
+            if event_date in df.index or (event_date >= df.index[0] and event_date <= df.index[-1]):
+                # Encontrar valor mais próximo
+                closest_idx = df.index.get_indexer([event_date], method='nearest')[0]
+                price = df['petrol_price'].iloc[closest_idx]
+                
+                fig.add_trace(go.Scatter(
+                    x=[event_date],
+                    y=[price],
+                    mode='markers+text',
+                    name=event['title'],
+                    text=[event['title']],
+                    textposition="top center",
+                    marker=dict(size=12, symbol='circle', color='red'),
+                    textfont=dict(size=10),
+                    hoverinfo='text',
+                    hovertext=event['title']
+                ))
+    
+    # Formatando o gráfico
+    fig.update_layout(
+        title="Linha do Tempo de Eventos Importantes no Mercado de Petróleo",
+        xaxis_title="Data",
+        yaxis_title="Preço (USD)",
+        height=400,
+        hovermode="x unified",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Criando um seletor de eventos
+    event_options = list(events_insights.keys())
+    event_titles = [events_insights[key]['title'] for key in event_options]
+    selected_event_title = st.selectbox("Escolha um evento para análise detalhada:", event_titles)
+    
+    # Encontrando o evento selecionado
+    selected_event_key = event_options[event_titles.index(selected_event_title)]
+    selected_event = events_insights[selected_event_key]
+    
+    # Exibindo detalhes do evento selecionado
+    st.header(selected_event['title'])
+    st.markdown(selected_event['description'])
+    
+    # Filtrando dados para o período do evento
+    if selected_event['date_range']:
+        start_date = pd.to_datetime(selected_event['date_range'][0])
+        end_date = pd.to_datetime(selected_event['date_range'][1])
+        event_df = df.loc[(df.index >= start_date) & (df.index <= end_date)]
+        
+        # Gráfico detalhado do período do evento
+        fig = go.Figure()
+        
+        # Adicionando linha para o preço
+        fig.add_trace(go.Scatter(
+            x=event_df.index,
+            y=event_df['petrol_price'],
+            mode='lines',
+            name='Preço Brent',
+            line=dict(color='royalblue', width=2)
+        ))
+        
+        # Destacando data do evento se existir
+        if selected_event['date']:
+            event_date = pd.to_datetime(selected_event['date'])
+            fig.add_vline(
+                x=event_date, 
+                line_width=2, 
+                line_dash="dash", 
+                line_color="red",
+                annotation_text=f"Início: {event_date.strftime('%d/%m/%Y')}",
+                annotation_position="top right"
+            )
+        
+        # Destacando fim do evento se existir
+        if selected_event['event_end']:
+            event_end_date = pd.to_datetime(selected_event['event_end'])
+            fig.add_vline(
+                x=event_end_date, 
+                line_width=2, 
+                line_dash="dash", 
+                line_color="green",
+                annotation_text=f"Fim: {event_end_date.strftime('%d/%m/%Y')}",
+                annotation_position="top left"
+            )
+        
+        # Formatando o gráfico
+        fig.update_layout(
+            title=f"Impacto do Evento: {selected_event['title']}",
+            xaxis_title="Data",
+            yaxis_title="Preço (USD)",
+            height=500,
+            hovermode="x unified"
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Estatísticas relevantes
+        with st.expander("Estatísticas do Período"):
+            col1, col2, col3, col4 = st.columns(4)
+            
+            # Calculando variação no período
+            start_price = event_df['petrol_price'].iloc[0]
+            end_price = event_df['petrol_price'].iloc[-1]
+            price_change = end_price - start_price
+            pct_change = (price_change / start_price) * 100
+            
+            with col1:
+                st.metric("Preço Inicial", f"US$ {start_price:.2f}")
+            
+            with col2:
+                st.metric("Preço Final", f"US$ {end_price:.2f}", f"{pct_change:.2f}%")
+            
+            with col3:
+                st.metric("Preço Máximo", f"US$ {event_df['petrol_price'].max():.2f}")
+            
+            with col4:
+                st.metric("Volatilidade", f"{event_df['volatility_30d'].mean():.2f}")
+            
+            # Exibindo dias com maior variação
+            st.subheader("Dias com Maior Variação")
+            top_changes = event_df.sort_values(by='price_pct_change', ascending=False).head(5)
+            
+            if not top_changes.empty:
+                # Criando DataFrame para exibição
+                display_df = pd.DataFrame({
+                    'Data': top_changes.index,
+                    'Preço (USD)': top_changes['petrol_price'].round(2),
+                    'Variação (USD)': top_changes['price_change'].round(2),
+                    'Variação (%)': top_changes['price_pct_change'].round(2)
+                })
+                
+                st.dataframe(display_df, use_container_width=True)
+    
+    # Insights adicionais baseados na análise completa
+    st.header("Conclusões e Análises Adicionais")
+    
+    # Média anual com anotações
+    st.subheader("Média Anual de Preços (2010-2025)")
+    
+    # Calculando médias anuais
+    yearly_avg = df.resample('Y')['petrol_price'].mean()
+    yearly_volatility = df.resample('Y')['volatility_30d'].mean()
+    
+    # Criando DataFrame para visualização
+    yearly_df = pd.DataFrame({
+        'Ano': yearly_avg.index.year,
+        'Preço Médio': yearly_avg.values,
+        'Volatilidade Média': yearly_volatility.values
+    })
+    
+    # Gráfico de barras para médias anuais
+    fig = go.Figure()
+    
+    # Adicionando barras para preços médios
+    fig.add_trace(go.Bar(
+        x=yearly_df['Ano'],
+        y=yearly_df['Preço Médio'],
+        name='Preço Médio',
+        marker_color='royalblue'
+    ))
+    
+    # Adicionando linha para volatilidade
+    fig.add_trace(go.Scatter(
+        x=yearly_df['Ano'],
+        y=yearly_df['Volatilidade Média'],
+        mode='lines+markers',
+        name='Volatilidade',
+        yaxis='y2',
+        line=dict(color='firebrick', width=2)
+    ))
+    
+    # Atualizando layout para eixo duplo
+    fig.update_layout(
+        title="Preço Médio e Volatilidade Anual do Petróleo Brent",
+        xaxis_title="Ano",
+        yaxis_title="Preço Médio (USD)",
+        yaxis2=dict(
+            title="Volatilidade",
+            overlaying="y",
+            side="right"
+        ),
+        height=500,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        barmode='group'
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Correlação com eventos econômicos mundiais
+    st.subheader("Correlação com Eventos Econômicos Mundiais")
+    
+    st.info("""
+    **Observações importantes sobre a correlação de preços do petróleo com eventos globais:**
+    
+    1. **Crises Financeiras**: Grandes crises financeiras, como a de 2008 (anterior ao nosso dataset) e o início da pandemia em 2020, geralmente levam a quedas acentuadas nos preços devido à redução da atividade econômica global.
+    
+    2. **Tensões Geopolíticas**: Conflitos em regiões produtoras (como Oriente Médio) ou envolvendo grandes produtores (como a Rússia) tendem a elevar os preços rapidamente devido ao risco de interrupção de fornecimento.
+    
+    3. **Decisões da OPEP+**: As decisões do cartel continuam sendo o fator individual mais importante para tendências de preços de médio prazo, como visto nas decisões de 2014, 2016 e 2020.
+    
+    4. **Ciclos Econômicos**: Os preços do petróleo tendem a seguir ciclos econômicos globais, com períodos de crescimento econômico sincronizado levando a aumentos de preços (como em 2017-2019 e 2021-2022).
+    
+    5. **Transição Energética**: O avanço das energias renováveis e políticas de descarbonização estão começando a influenciar as perspectivas de longo prazo para os preços do petróleo, potencialmente limitando picos de preço sustentados.
+    """)
+    
+    # Conclusão
+    st.header("Conclusão")
+    
+    st.success("""
+    A análise histórica dos preços do petróleo Brent revela um mercado extremamente sensível a eventos geopolíticos, decisões de grandes produtores e mudanças macroeconômicas globais. Os principais insights obtidos são:
+    
+    1. O petróleo continua sendo uma commodity estratégica cujo preço reflete tensões geopolíticas globais
+    2. A volatilidade do mercado tem aumentado nos últimos anos, com eventos extremos tornando-se mais frequentes
+    3. Existe uma correlação clara entre decisões coordenadas de produção (OPEP+) e tendências de preços de médio prazo
+    4. Grandes crises globais (como a pandemia) podem causar disrupções sem precedentes no equilíbrio de oferta e demanda
+    5. O mercado apresenta uma capacidade notável de recuperação após choques, como visto na recuperação pós-pandemia
+    6. A transição energética está começando a introduzir novos fatores estruturais que moldarão o mercado nas próximas décadas
+    
+    Estes insights são valiosos para investidores, formuladores de políticas e empresas do setor de energia que precisam navegar um ambiente cada vez mais complexo e volátil.
+    """)
 
 with tab3:
     st.header("Previsao do Preço do Petroleo Brent")
