@@ -455,7 +455,7 @@ with tab3:
     st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
     st.write(forecast[['ds', 'yhat']].rename(columns={'ds': 'data', 'yhat':'preço predito'}).tail(days))
     df_price = df['2025-04-01':]
-    forecast = forecast[['ds', 'yhat']].query(" ds >= '2025-04-01' ")
+    forecast = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].query(" ds >= '2025-04-01' ")
     
     # Plotar previsão
     fig = go.Figure()
