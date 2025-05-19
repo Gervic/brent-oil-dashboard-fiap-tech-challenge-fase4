@@ -440,6 +440,13 @@ with tab2:
 
 with tab3:
     st.header("Previsao do Preço do Petroleo Brent")
+    st.markdown("### Métricas do modelo")
+    cl1, cl2 = st.columns(2)
+    rmse = 6.341757
+    mae = 4.923904
+    cl1.metric("Erro quadrático médio (RMSE)", f"US$ {rmse:.2f}")
+    cl2.metric("Erro médio absoluto (MAE)", f"US$ {mae:.2f}")
+    
     @st.cache_resource
     def load_model():
         return joblib.load('prophet_model.pkl')
