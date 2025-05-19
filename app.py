@@ -688,7 +688,7 @@ with tab:
             if isinstance(event_date, pd.Series) or isinstance(event_date, pd.Index):
                 event_date = event_date.iloc[0]
             fig.add_vline(
-                x=event_date, 
+                x=event_date.to_pydatetime(), 
                 line_width=2, 
                 line_dash="dash", 
                 line_color="red",
@@ -702,7 +702,7 @@ with tab:
             if isinstance(event_end_date, pd.Series) or isinstance(event_end_date, pd.Index):
                 event_end_date = event_end_date.iloc[0]
             fig.add_vline(
-                x=event_end_date, 
+                x=event_end_date.to_pydatetime(), 
                 line_width=2, 
                 line_dash="dash", 
                 line_color="green",
