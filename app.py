@@ -593,11 +593,11 @@ with tab:
         }
 
     def ensure_datetime_scalar(value):
-    """Converte datas para um datetime.datetime escalar seguro para uso no Plotly"""
-    value = pd.to_datetime(value)
-    if isinstance(value, (pd.Series, pd.Index)):
-        value = value[0]  # ou .iloc[0] se for Series
-    return value.to_pydatetime() if hasattr(value, 'to_pydatetime') else value
+        """Converte datas para um datetime.datetime escalar seguro para uso no Plotly"""
+        value = pd.to_datetime(value)
+        if isinstance(value, (pd.Series, pd.Index)):
+            value = value[0]  # ou .iloc[0] se for Series
+        return value.to_pydatetime() if hasattr(value, 'to_pydatetime') else value
     
     # Carregando eventos
     events_insights = get_events_insights()
