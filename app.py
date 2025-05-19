@@ -271,7 +271,7 @@ with tab1:
         arrowhead=1,
         ax=30,
         ay=-30,
-        bgcolor="white"
+        bgcolor="black"
     )
     
     fig.add_annotation(
@@ -282,7 +282,7 @@ with tab1:
         arrowhead=1,
         ax=50,
         ay=50,
-        bgcolor="white"
+        bgcolor="black"
     )
     
     # Customizações de layout
