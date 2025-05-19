@@ -591,6 +591,13 @@ with tab:
                 'date_range': ['2010-01-01', '2025-05-02']
             }
         }
+
+    def ensure_datetime_scalar(value):
+    """Converte datas para um datetime.datetime escalar seguro para uso no Plotly"""
+    value = pd.to_datetime(value)
+    if isinstance(value, (pd.Series, pd.Index)):
+        value = value[0]  # ou .iloc[0] se for Series
+    return value.to_pydatetime() if hasattr(value, 'to_pydatetime') else value
     
     # Carregando eventos
     events_insights = get_events_insights()
@@ -684,11 +691,9 @@ with tab:
         
         # Destacando data do evento se existir
         if selected_event['date']:
-            event_date = pd.to_datetime(selected_event['date'])
-            if isinstance(event_date, pd.Series) or isinstance(event_date, pd.Index):
-                event_date = event_date.iloc[0]
+            event_date = ensure_datetime_scalar(selected_event['date'])
             fig.add_vline(
-                x=event_date.to_pydatetime(), 
+                x=event_date, 
                 line_width=2, 
                 line_dash="dash", 
                 line_color="red",
@@ -698,11 +703,9 @@ with tab:
         
         # Destacando fim do evento se existir
         if selected_event['event_end']:
-            event_end_date = pd.to_datetime(selected_event['event_end'])
-            if isinstance(event_end_date, pd.Series) or isinstance(event_end_date, pd.Index):
-                event_end_date = event_end_date.iloc[0]
+            event_end_date = ensure_datetime_scalar(selected_event['date'])
             fig.add_vline(
-                x=event_end_date.to_pydatetime(), 
+                x=event_end_date, 
                 line_width=2, 
                 line_dash="dash", 
                 line_color="green",
