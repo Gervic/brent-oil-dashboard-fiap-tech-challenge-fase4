@@ -112,7 +112,7 @@ with tab1:
         
         Desenvolvida para auxiliar na tomada de decisões estratégicas baseadas em dados históricos e tendências futuras.
         
-        📧 [Contato para Suporte](mailto:suporte@fiap-analytics.com)
+        📧 [Contato para Suporte](email para:suporte@brent-analytics.com)
         """)
 
     # Cálculos
@@ -163,7 +163,7 @@ with tab1:
                     arrowhead=1,
                     ax=0,
                     ay=-40,
-                    bgcolor="white",
+                    bgcolor="black",
                     opacity=0.8
                 )
     
