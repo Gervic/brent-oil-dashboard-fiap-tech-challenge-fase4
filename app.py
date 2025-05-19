@@ -91,10 +91,11 @@ with tab1:
     
      # Selecionar tema
     st.sidebar.subheader("Configurações")
+    show_all_events = st.sidebar.checkbox("Mostrar no gráfico todos os eventos relevantes?", value=False)
     theme = st.sidebar.selectbox("Tema", ["Claro", "Escuro"], index=0)
     
     # Aplicando tema
-    if theme == "Escuro":
+    if theme == "Claro":
         st.markdown("""
         <style>
         .stApp {
@@ -144,6 +145,27 @@ with tab1:
         name='Preço Brent (USD)',
         line=dict(color='#1f77b4', width=2)
     ))
+    # Adicionando eventos importantes, se solicitado
+    if show_all_events and events:
+        for date, info in events.items():
+            event_date = pd.to_datetime(date)
+            if event_date in df.index or (event_date >= df.index[0] and event_date <= df.index[-1]):
+                # Encontrar o valor y mais próximo para o evento
+                closest_date = df.index[df.index.get_indexer([event_date], method='nearest')[0]]
+                y_value = df.loc[closest_date, 'petrol_price']
+                
+                # Adicionar anotação do evento
+                fig.add_annotation(
+                    x=event_date,
+                    y=y_value,
+                    text=info['event'],
+                    showarrow=True,
+                    arrowhead=1,
+                    ax=0,
+                    ay=-40,
+                    bgcolor="white",
+                    opacity=0.8
+                )
     
     # Médias móveis
     fig.add_trace(go.Scatter(
