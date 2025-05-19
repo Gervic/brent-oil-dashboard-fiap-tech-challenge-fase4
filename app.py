@@ -454,10 +454,12 @@ with tab3:
     # Exibir resultado
     st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
     st.write(forecast[['ds', 'yhat']].rename(columns={'ds': 'data', 'yhat':'preço predito'}).tail(days))
+    df_price = df['2025-04-01':]
+    forecast = forecast[['ds', 'yhat']].query(" ds >= '2025-04-01' ")
     
     # Plotar previsão
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df.index, y=df['petrol_price'], mode='lines', name='Histórico'))
+    fig.add_trace(go.Scatter(x=df_price.index, y=df_price['petrol_price'], mode='lines', name='Histórico'))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], mode='lines', name='Previsão'))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], mode='lines', name='Limite superior', line=dict(dash='dot'), opacity=0.3))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], mode='lines', name='Limite inferior', line=dict(dash='dot'), opacity=0.3))
