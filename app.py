@@ -685,6 +685,8 @@ with tab:
         # Destacando data do evento se existir
         if selected_event['date']:
             event_date = pd.to_datetime(selected_event['date'])
+            if isinstance(event_date, pd.Series) or isinstance(event_date, pd.Index):
+                event_date = event_date.iloc[0]
             fig.add_vline(
                 x=event_date, 
                 line_width=2, 
@@ -697,6 +699,8 @@ with tab:
         # Destacando fim do evento se existir
         if selected_event['event_end']:
             event_end_date = pd.to_datetime(selected_event['event_end'])
+            if isinstance(event_end_date, pd.Series) or isinstance(event_end_date, pd.Index):
+                event_end_date = event_end_date.iloc[0]
             fig.add_vline(
                 x=event_end_date, 
                 line_width=2, 
