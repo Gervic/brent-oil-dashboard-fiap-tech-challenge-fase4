@@ -268,6 +268,7 @@ with tab1:
     
     ● Transições sazonais (março-abril e setembro-outubro): Períodos de
     relativa fraqueza de preços, quando a demanda sazonal diminui.
+    
     A análise boxplot mostra também a alta variabilidade dentro de cada mês,
     indicando que fatores fundamentais e geopolíticos frequentemente superam os
     padrões sazonais.
@@ -414,8 +415,8 @@ with tab2:
         (vermelho), definidos como movimentos de pelo menos 20% nos preços:
         
         ● Ciclo de Alta 2020-2022: O mais expressivo da série (+183,8%), indo de
-        $43,24 em julho de 2020 a $122,71 em agosto de 2022. Este rally
-        extraordinário foi impulsionado pela combinação de recuperação da
+        43,24 dolares em julho de 2020 a 122,71 dolares em agosto de 2022. 
+        Este aumento foi impulsionado pela combinação de recuperação da
         demanda pós-pandemia, cortes de produção da OPEP+ e o choque da
         invasão da Ucrânia.
         
