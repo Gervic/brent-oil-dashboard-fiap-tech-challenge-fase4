@@ -855,29 +855,43 @@ with tab:
 with tab3:
     st.header("Previsao do Preço do Petroleo Brent")
     st.markdown("### Métricas do modelo")
-    cl1, cl2 = st.columns(2)
-    rmse = 6.341757
-    mae = 4.923904
+    cl1, cl2, cl3 = st.columns(3)
+    rmse = 4.355010
+    mae = 3.512644
     cl1.metric("Erro quadrático médio (RMSE)", f"US$ {rmse:.2f}")
     cl2.metric("Erro médio absoluto (MAE)", f"US$ {mae:.2f}")
     
     @st.cache_resource
     def load_model():
-        return joblib.load('prophet_model.pkl')
+        return joblib.load('prophet_model_v2.pkl')
         
     model = load_model()
-    days = st.number_input("Quantos dias para prever?", min_value=1, max_value=365, value=7)
-    
-    future_dates = model.make_future_dataframe(periods=days)
+    days = st.number_input("Quantos dias para prever?", min_value=1, max_value=15, value=7)
     
     # Gerar previsão
+    future_dates = model.make_future_dataframe(periods=90)
     forecast = model.predict(future_dates)
+    future_dt = (datetime.now() +  timedelta(days=days)).strftime('%Y-%m-%d')
+    next_dt = (datetime.now() +  timedelta(days=1))
+    df_to_display = forecast[['ds', 'yhat']].set_index("ds").sort_index()[:f"{future_dt}"].tail(days)
     
     # Exibir resultado
     st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
-    st.write(forecast[['ds', 'yhat']].rename(columns={'ds': 'data', 'yhat':'preço predito'}).tail(days))
-    df_price = df['2025-04-01':]
-    forecast = forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].query(" ds >= '2025-04-01' ")
+    st.dataframe(df_to_display.rename(columns={'ds': 'data', 'yhat':'preço predito'}))
+    df_price = df['2025-05-01':]
+    start_dt = pd.to_datetime("2025-05-01")
+    forecast = (forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
+                .set_index('ds')
+               )
+    forecast.index = pd.to_datetime(forecast.index)
+
+    forecast = (forecast
+                .loc[(forecast.index >= start_dt) & (forecast.index <= next_dt)]
+                .reset_index()
+               )
+    
+    next_day_price = forecast['yhat'].iloc[-1]
+    cl3.metric(f"Previsão do dia {next_dt.strftime('%d-%m-%Y')}", f"US$ {next_day_price:.2f}")
     
     # Plotar previsão
     fig = go.Figure()
