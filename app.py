@@ -854,7 +854,6 @@ with tab:
 
 with tab3:
     st.header("Previsão do Preço do Petróleo Brent")
-    st.markdown("#### Métricas do modelo")
     
     @st.cache_resource
     def load_model():
@@ -870,9 +869,6 @@ with tab3:
     next_dt = (datetime.now() +  timedelta(days=1))
     df_to_display = forecast[['ds', 'yhat']].set_index("ds").sort_index()[:f"{future_dt}"].tail(days)
     
-    # Exibir resultado
-    st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
-    st.dataframe(df_to_display.rename(columns={'ds': 'data', 'yhat':'preço predito'}))
     df_price = df['2025-05-01':]
     start_dt = pd.to_datetime("2025-05-01")
     forecast = (forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
@@ -892,6 +888,9 @@ with tab3:
     cl1.metric(f"Previsão do dia {next_dt.strftime('%d-%m-%Y')}", f"US$ {next_day_price:.2f}")
     cl2.metric("Erro quadrático médio (RMSE)", f"US$ {rmse:.2f}")
     cl3.metric("Erro médio absoluto (MAE)", f"US$ {mae:.2f}")
+    # Exibir resultado
+    st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
+    st.dataframe(df_to_display.rename(columns={'ds': 'data', 'yhat':'preço predito'}))
     
     # Plotar previsão
     fig = go.Figure()
@@ -903,7 +902,7 @@ with tab3:
     fig.update_layout(title="Previsão do modelo vs Histórico", xaxis_title="Data", yaxis_title="Preço($)", template="plotly_white")
     st.plotly_chart(fig, use_container_width=True)
     
-    with st.expander("Sobre o Modelo Prophet"):
+    with st.expander("Sobre o Modelo"):
         st.write("""
         O modelo utilizado para previsão é o **Prophet**, desenvolvido pela Facebook (atual Meta) para lidar com séries temporais com sazonalidades fortes e tendências não lineares.
     
