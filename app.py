@@ -692,26 +692,29 @@ with tab:
         # Destacando data do evento se existir
         if selected_event['date']:
             event_date = ensure_datetime_scalar(selected_event['date'])
-            fig.add_vline(
-                x=event_date, 
-                line_width=2, 
-                line_dash="dash", 
-                line_color="red",
-                annotation_text=f"Início: {event_date.strftime('%d/%m/%Y')}",
-                annotation_position="top right"
-            )
-        
-        # Destacando fim do evento se existir
-        if selected_event['event_end']:
-            event_end_date = ensure_datetime_scalar(selected_event['date'])
-            fig.add_vline(
-                x=event_end_date, 
-                line_width=2, 
-                line_dash="dash", 
-                line_color="green",
-                annotation_text=f"Fim: {event_end_date.strftime('%d/%m/%Y')}",
-                annotation_position="top left"
-            )
+            if selected_event['event_end']:
+                event_end_date = ensure_datetime_scalar(selected_event['event_end'])
+                fig.add_vrect(
+                    x0=event_date,
+                    x1=event_end_date,
+                    fillcolor="LightSalmon",
+                    opacity=0.3,
+                    layer="below",
+                    line_width=0,
+                    annotation_text=selected_event['title'],
+                    annotation_position="top left"
+                )
+            else:
+                fig.add_vrect(
+                    x0=event_date,
+                    x1=event_date + timedelta(days = 2),
+                    fillcolor="LightSalmon",
+                    opacity=0.3,
+                    layer="below",
+                    line_width=0,
+                    annotation_text=selected_event['title'],
+                    annotation_position="top left"
+                )
         
         # Formatando o gráfico
         fig.update_layout(
