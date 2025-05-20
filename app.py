@@ -852,21 +852,16 @@ with tab:
 
 with tab3:
     st.header("Previsão do Preço do Petróleo Brent")
-    
     @st.cache_resource
     def load_model():
-        return joblib.load('prophet_model_v2.pkl')
-        
+        return joblib.load('prophet_model_v2.pkl')    
     model = load_model()
-    days = st.number_input("Quantos dias para prever?", min_value=1, max_value=15, value=7)
     
     # Gerar previsão
     future_dates = model.make_future_dataframe(periods=90)
     forecast = model.predict(future_dates)
-    future_dt = (datetime.now() +  timedelta(days=days)).strftime('%Y-%m-%d')
-    next_dt = (datetime.now() +  timedelta(days=1))
-    df_to_display = forecast[['ds', 'yhat']].set_index("ds").sort_index()[:f"{future_dt}"].tail(days)
     
+    next_dt = (datetime.now() +  timedelta(days=1)) 
     df_price = df['2025-05-01':]
     start_dt = pd.to_datetime("2025-05-01")
     forecast = (forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']]
@@ -886,7 +881,11 @@ with tab3:
     cl1.metric(f"Previsão do dia {next_dt.strftime('%d-%m-%Y')}", f"US$ {next_day_price:.2f}")
     cl2.metric("Erro quadrático médio (RMSE)", f"US$ {rmse:.2f}")
     cl3.metric("Erro médio absoluto (MAE)", f"US$ {mae:.2f}")
+    
     # Exibir resultado
+    days = st.number_input("Quantos dias para prever?", min_value=1, max_value=15, value=7)
+    future_dt = (datetime.now() +  timedelta(days=days)).strftime('%Y-%m-%d')
+    df_to_display = forecast[['ds', 'yhat']].set_index("ds").sort_index()[:f"{future_dt}"].tail(days)
     st.write("Previsão do preço em US$ para os próximos {} dias:".format(days))
     st.dataframe(df_to_display.rename(columns={'ds': 'data', 'yhat':'preço predito'}))
     
