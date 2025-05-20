@@ -853,13 +853,8 @@ with tab:
     """)
 
 with tab3:
-    st.header("Previsao do Preço do Petroleo Brent")
-    st.markdown("### Métricas do modelo")
-    cl1, cl2, cl3 = st.columns(3)
-    rmse = 4.355010
-    mae = 3.512644
-    cl1.metric("Erro quadrático médio (RMSE)", f"US$ {rmse:.2f}")
-    cl2.metric("Erro médio absoluto (MAE)", f"US$ {mae:.2f}")
+    st.header("Previsão do Preço do Petróleo Brent")
+    st.markdown("#### Métricas do modelo")
     
     @st.cache_resource
     def load_model():
@@ -889,9 +884,14 @@ with tab3:
                 .loc[(forecast.index >= start_dt) & (forecast.index <= next_dt)]
                 .reset_index()
                )
-    
+    #Metrics cards
     next_day_price = forecast['yhat'].iloc[-1]
-    cl3.metric(f"Previsão do dia {next_dt.strftime('%d-%m-%Y')}", f"US$ {next_day_price:.2f}")
+    rmse = 4.355010
+    mae = 3.512644
+    cl1, cl2, cl3 = st.columns(3)
+    cl1.metric(f"Previsão do dia {next_dt.strftime('%d-%m-%Y')}", f"US$ {next_day_price:.2f}")
+    cl2.metric("Erro quadrático médio (RMSE)", f"US$ {rmse:.2f}")
+    cl3.metric("Erro médio absoluto (MAE)", f"US$ {mae:.2f}")
     
     # Plotar previsão
     fig = go.Figure()
@@ -900,8 +900,24 @@ with tab3:
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_upper'], mode='lines', name='Limite superior', line=dict(dash='dot'), opacity=0.3))
     fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat_lower'], mode='lines', name='Limite inferior', line=dict(dash='dot'), opacity=0.3))
     
-    fig.update_layout(title="Previsão com Prophet", xaxis_title="Data", yaxis_title="Valor", template="plotly_white")
+    fig.update_layout(title="Previsão do modelo vs Histórico", xaxis_title="Data", yaxis_title="Preço($)", template="plotly_white")
     st.plotly_chart(fig, use_container_width=True)
+    
+    with st.expander("Sobre o Modelo Prophet"):
+        st.write("""
+        O modelo utilizado para previsão é o **Prophet**, desenvolvido pela Facebook (atual Meta) para lidar com séries temporais com sazonalidades fortes e tendências não lineares.
+    
+        Este modelo é particularmente indicado para o preço do petróleo por sua capacidade de:
+        - Capturar tendências de longo prazo com suavidade
+        - Considerar sazonalidades diárias, semanais e anuais
+        - Lidar bem com feriados e eventos atípicos (caso adicionados)
+        
+        As métricas de performance do modelo incluem:
+        - MAE (Mean Absolute Error): Aproximadamente 3,51
+        - RMSE (Root Mean Square Error): Aproximadamente 4,36
+    
+        O modelo é reestimado periodicamente para refletir as atualizações mais recentes da série histórica.
+        """)
     
 
 # Add footer
