@@ -325,7 +325,6 @@ with tab2:
     st.header("Volatilidade do preço do petróleo Brent")
     c1, c2 = st.columns(2)
     with c1:
-        st.markdown('#### Volatilidade')
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=df.index,
@@ -368,7 +367,6 @@ with tab2:
         causadores de volatilidade no mercado petrolífero.
         """)
     with c2:
-        st.markdown('#### Preços de acordo com as altas/baixas do mercado')
         def identify_market_phases(series, threshold=0.2):
           bull_markets = []
           bear_markets = []
