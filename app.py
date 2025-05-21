@@ -95,7 +95,7 @@ with tab1:
     theme = st.sidebar.selectbox("Tema", ["Claro", "Escuro"], index=0)
     
     # Aplicando tema
-    if theme == "Claro":
+    if theme == "Escuro":
         st.markdown("""
         <style>
         .stApp {
