@@ -1,6 +1,9 @@
 Brent Oil Price Analysis Dashboard
 
 This is an interactive dashboard built with Streamlit that provides comprehensive analysis of Brent Oil prices, including historical trends, volatility analysis, seasonal patterns, and price forecasting.
+
+[▶️ Watch demo video](/streamlit-app-2025-09-21-09-09-77.webm)
+
 [Streamlit link](https://fiapchallenge4dashboard.streamlit.app/)
 
 ## Features
